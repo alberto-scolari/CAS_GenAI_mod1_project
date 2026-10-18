@@ -1,0 +1,36 @@
+[project]
+name = "slide-analyzer"
+version = "0.1.0"
+description = "Jupyter + Gradio app that analyzes a slide image with OpenAI models"
+requires-python = ">=3.11,<3.14"
+dependencies = [
+    # notebook environment
+    "jupyterlab>=4",
+    "ipykernel",
+    "ipywidgets",       # notebook progress bars (avoids tqdm's "IProgress not found" warning)
+    # app
+    "openai>=2",        # responses.parse + structured outputs, reasoning effort, web search tool
+    "gradio>=5",
+    "pillow>=10.1",     # scalable default font for the labels
+    "pydantic>=2",
+    "pypdfium2>=4",     # renders PDF pages to images (no system dependencies)
+    "markdown-it-py",   # Markdown -> HTML for the details cards (also a dependency of gradio)
+    "linkify-it-py",    # turns plain web addresses in the explanations into links
+]
+
+# --- uv ------------------------------------------------------------------------
+# This project is a notebook, not an installable package: install only its dependencies.
+#   uv sync && uv run jupyter lab slide_analyzer.ipynb
+[tool.uv]
+package = false
+
+# --- pixi ----------------------------------------------------------------------
+# Python comes from conda-forge (from requires-python); the dependencies above are
+# installed from PyPI. The project itself is not installed as a package.
+#   pixi run lab
+[tool.pixi.workspace]
+channels = ["conda-forge"]
+platforms = ["osx-arm64", "osx-64", "linux-64", "win-64"]
+
+[tool.pixi.tasks]
+lab = "jupyter lab slide_analyzer.ipynb"
